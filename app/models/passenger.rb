@@ -1,7 +1,8 @@
 class Passenger < ActiveRecord::Base
 	belongs_to :flight
   
-  def add_flight
+  def add_flight(random_insult)
+    @random_insult = random_insult
     @number_of_tries_to_validate ||= 0  
     all_flights = Flight.all
     destinations = []
@@ -17,11 +18,12 @@ class Passenger < ActiveRecord::Base
     if destination_valid
       puts "Enjoy your trip to #{@chosen_destination}"
       self.update_attribute :flight_id,@result.id
+      puts "Your Flight Number is #{@result.id}. Save this number for future check in."
     else
       puts "That destination is not valid"
       @number_of_tries_to_validate += 1
-      return "You're an idiot. You cannot fly with easy airlines." if @number_of_tries_to_validate > 2
-      self.add_flight
+      return "#{ random_insult}. You cannot fly with easy airlines." if @number_of_tries_to_validate > 2
+      self.add_flight(@random_insult)
     end
     #Passenger.first.update_attribute :flight_id,1
     
